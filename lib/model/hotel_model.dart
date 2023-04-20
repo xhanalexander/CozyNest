@@ -2,6 +2,9 @@ class HotelModel {
   final String name;
   final String address;
   final String description;
+  // final String image;
+  // final String rating;
+
 
   HotelModel({
     required this.name,

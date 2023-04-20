@@ -4,13 +4,12 @@ import '../model/hotel_model.dart';
 
 class HotelViewModel extends ChangeNotifier {
 
-
   List<HotelModel> _hotel = [];
 
   List<HotelModel> get hotel => _hotel;
 
   getAllHotel() async {
-    final h = await HotelAPI.getHotels();
+    final h = await HotelAPI.getAllHotel();
     _hotel = h;
     notifyListeners();
   }
