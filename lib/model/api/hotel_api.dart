@@ -1,9 +1,8 @@
 import 'dart:developer';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import '../hotel_model.dart';
 import 'privates.dart';
+import '../hotel_model.dart';
 
 class HotelAPI {
   static const String _BASE_URL = 'https://booking-com.p.rapidapi.com/v1/static/hotels';

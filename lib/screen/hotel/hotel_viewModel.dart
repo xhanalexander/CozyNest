@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/api/hotel_api.dart';
-import '../model/hotel_model.dart';
+import '../../model/api/hotel_api.dart';
+import '../../model/hotel_model.dart';
 
 class HotelViewModel extends ChangeNotifier {
 
