@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       ], 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        initialRoute: '/homepage',
         routes: {
           '/': (context) => const LoginPage(),
           '/homepage' : (context) => const HotelViews(),
