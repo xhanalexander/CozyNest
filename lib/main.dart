@@ -1,5 +1,6 @@
-import 'package:cozynest/screen/hotel_viewModel.dart';
-import 'package:cozynest/screen/hotel_views.dart';
+import 'package:cozynest/screen/auth/login.dart';
+import 'package:cozynest/screen/hotel/hotel_viewModel.dart';
+import 'package:cozynest/screen/hotel/hotel_views.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,9 +19,13 @@ class MyApp extends StatelessWidget {
           create: (context) => HotelViewModel(),
         )
       ], 
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HotelViews(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const LoginPage(),
+          '/homepage' : (context) => const HotelViews(),
+        },
       ),
     );
   }
