@@ -1,17 +1,31 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import '../../model/api/hotel_api.dart';
 import '../../model/hotel_model.dart';
 
+enum HotelState { initial, loading, loaded, error }
+
 class HotelViewModel extends ChangeNotifier {
+  List<HotelModel> _hotels = [];
+  HotelState _state = HotelState.initial;
 
-  List<HotelModel> _hotel = [];
+  List<HotelModel> get hotels => _hotels;
+  
+  HotelState get state => _state;
 
-  List<HotelModel> get hotel => _hotel;
+  getHotels() async {
+    _state = HotelState.loading;
 
-  getAllHotel() async {
-    final h = await HotelAPI.getAllHotel();
-    _hotel = h;
+    try {
+      final hotels = await HotelAPI.getAllHotel();
+      _hotels = hotels;
+      _state = HotelState.loaded;
+    } catch (e) {
+      _state = HotelState.error;
+    }
     notifyListeners();
+    // log(">> results =" + hotels[0].name);
+
   }
   
 }

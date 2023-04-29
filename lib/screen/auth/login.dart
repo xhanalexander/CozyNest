@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,13 +9,45 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isLogin();
+  }
+
+  late SharedPreferences login;
+  bool obscureText = true;
+  late bool newUser;
+
+  void isLogin() async {
+    login = await SharedPreferences.getInstance();
+    newUser = (login.getBool('login') ?? true);
+    if (!newUser) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Form(
-          // key: formKey,
+          key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -22,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               TextFormField(
-                // controller: nameController,
+                controller: nameController,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   labelText: "Name",
@@ -35,9 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20),
               TextFormField(
-                // controller: emailController,
+                controller: emailController,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   labelText: "Email",
@@ -50,16 +83,23 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20),
               TextFormField(
-                // controller: passwordController,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
+                controller: passwordController,
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
                   labelText: "Password",
-                  suffixIcon: Icon(Icons.visibility),
-                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    }, 
+                  ),
+                  prefixIcon: const Icon(Icons.lock),
                 ),
-                obscureText: true,
+                obscureText: obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your password";
@@ -67,15 +107,22 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
                   labelText: "Confirm Password",
-                  suffixIcon: Icon(Icons.visibility),
-                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    }, 
+                  ),
+                  prefixIcon: const Icon(Icons.lock),
                 ),
-                obscureText: true,
+                obscureText: obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please re-enter your confirm password";
@@ -83,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 height: 45,
@@ -94,43 +141,18 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   onPressed: () {
-                    /* if (formKey.currentState!.validate()) {
-                      setState(() {
-                        data.add({
-                          "name": nameController.text,
-                          "email": emailController.text,
-                          "password": passwordController.text,
-                        });
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Success"),
-                                content: Text(
-                                    "Your account has been created welcome, ${nameController.text}"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const WelcomePage()),
-                                      );
-                                    },
-                                    child: const Text("OK"),
-                                  ),
-                                ],
-                              );
-                            });
-                      });
-                    } */
+                    String usernames = nameController.text;
+                    if (formKey.currentState!.validate()) {
+                      login.setBool('login', false);
+                      login.setString('username', usernames);
+                      Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
+                    }
                   },
                   child:
                       const Text("Sign Up", style: TextStyle(fontSize: 20)),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -147,8 +169,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              // contact us
-              SizedBox(height: 20,),
             ],
           ),
         ),
