@@ -1,5 +1,7 @@
 import 'package:cozynest/screen/auth/login.dart';
 import 'package:cozynest/screen/hotel/hotel_viewModel.dart';
+import 'package:cozynest/screen/hotel/hotel_view_List.dart';
+import 'package:cozynest/screen/hotel/hotel_view_detail.dart';
 import 'package:cozynest/screen/hotel/hotel_views.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,16 +19,35 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => HotelViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
         )
       ], 
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/homepage',
-        routes: {
-          '/': (context) => const LoginPage(),
-          '/homepage' : (context) => const HotelViews(),
-        },
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+          routes: {
+            '/': (context) => const LoginPage(),
+            '/homepage' : (context) => const HotelViews(),
+            '/detail' : (context) => const HotelDetail(),
+            '/list' : (context) => const HotelList(),
+          },
+        ),
       ),
     );
+  }
+}
+
+class ThemeProvider extends ChangeNotifier {
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleTheme() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
   }
 }

@@ -20,25 +20,21 @@ class HotelAPI {
         ),
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        List<HotelModel> hotels = data
-            .map(
-              (e) => HotelModel(
-                name: e['name'],
-                address: e['address'],
-                description: e['description'],
-              ),
-            )
-            .toList();
+      // log(">> results = " + response.statusCode.toString());
 
-        // log(">> results =" + response.statusCode.toString());
+      if (response.statusCode == 200) {
+        final datas = response.data['result'];
+        // log(">> hasil =" + datas.toString());
+        List<HotelModel> hotels = List<HotelModel>.from(datas.map((model) => HotelModel.fromJson(model)));
+        // log(">> results =" + hotels[0].name);
         return hotels;
       } else {
         throw Exception('Failed to load hotels');
       }
     } catch (e) {
+      // log(e.toString());
       throw Exception('Failed to load hotels: $e');
     }
   }
+  
 }

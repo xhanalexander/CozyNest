@@ -1,22 +1,22 @@
 class HotelModel {
   final String name;
-  final String address;
-  final String description;
-  // final String image;
-  // final String rating;
-
+  final String? address;
+  final String hotel_description;
+  final double? exact_class;
 
   HotelModel({
     required this.name,
-    required this.address,
-    required this.description,
+    this.address,
+    required this.hotel_description,
+    this.exact_class,
   });
 
   factory HotelModel.fromJson(Map<String, dynamic> json) {
     return HotelModel(
       name: json['name'],
       address: json['address'],
-      description: json['description'],
+      hotel_description: json['hotel_description'],
+      exact_class: json['exact_class'],
     );
   }
 
@@ -24,7 +24,8 @@ class HotelModel {
     return {
       'name': name,
       'address': address,
-      'description': description,
+      'hotel_description': hotel_description,
+      'exact_class': exact_class,
     };
   }
   
