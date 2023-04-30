@@ -1,11 +1,11 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../main.dart';
+import '../profile/profile_view.dart';
 import 'hotel_viewModel.dart';
 import 'hotel_view_List.dart';
-import 'dart:developer';
-import '../../main.dart';
-import '../../model/hotel_model.dart';
 
 
 class HotelViews extends StatefulWidget {
@@ -31,6 +31,18 @@ class _HotelViewsState extends State<HotelViews> {
       displayName = (prefs.getString('username') ?? '');
     });
   }
+
+  Future<void> isLogout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/',
+      (route) => false,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +79,7 @@ class _HotelViewsState extends State<HotelViews> {
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text("Logout", style: TextStyle(color: Colors.red)),
               onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+                isLogout(context);
               },
             ),
           ],
@@ -76,6 +88,7 @@ class _HotelViewsState extends State<HotelViews> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: Theme.of(context).brightness == Brightness.dark ? primarySecond : primarySecond,
             flexibleSpace: FlexibleSpaceBar(
               title: RichText(
                 text: TextSpan(
@@ -83,14 +96,16 @@ class _HotelViewsState extends State<HotelViews> {
                     const TextSpan(
                       text: "Welcome, ",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 18,
+                        color: accentColor,
                       ),
                     ),
                     TextSpan(
                       text: displayName,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: secondaryColor,
                       ),
                     ),
                   ],
@@ -98,10 +113,24 @@ class _HotelViewsState extends State<HotelViews> {
               )
             ),
             expandedHeight: 200,
-            // pinned: true,
+            pinned: true,
             actions: [
               IconButton(
-                onPressed: () {}, 
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, _) {
+                        return const ProfileAccount();
+                      },
+                      transitionsBuilder: (context, animation, _, child) {
+                        return SlideTransition(position: Tween<Offset>(
+                          begin: const Offset(1, 0),
+                          end: Offset.zero,
+                        ).animate(animation), child: child,);
+                      },
+                    ),
+                  );
+                }, 
                 icon: const Icon(Icons.account_circle, size: 30),
               ),
             ],
@@ -145,6 +174,7 @@ class _HotelViewsState extends State<HotelViews> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
+                              color: accentColor,
                             ),
                           ),
                         ),
@@ -158,44 +188,34 @@ class _HotelViewsState extends State<HotelViews> {
                         itemCount: 5,
                         itemBuilder: (context, index) {
                           return Card(
+                            color: primarySecond,
                             margin: const EdgeInsets.only(right: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: radiusBorder,
                             ),
                             child: InkWell(
-                              splashColor: Colors.blue,
-                              onTap: () {
-                                // Navigator.pushNamed(context, '/detail');
-                              },
+                              splashColor: accentColor,
+                              onTap: () {},
                               child: SizedBox(
                                 width: 150,
                                 height: 200,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(modelView.hotels[index].name, style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
+                                        color: secondaryColor,
                                       ),),
                                     ),
-                                    /* Padding(
-                                      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                                      child: Text(
-                                        modelView.hotels[index].hotel_description,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ), */
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.location_on, size: 20, color: Colors.grey),
+                                          const Icon(Icons.location_on, size: 20, color: secondaryColor),
                                           Expanded(
                                             child: Text(
                                               modelView.hotels[index].address.toString().substring(0, 10),
@@ -203,7 +223,7 @@ class _HotelViewsState extends State<HotelViews> {
                                               overflow: TextOverflow.visible,
                                               style: const TextStyle(
                                                 fontSize: 14,
-                                                color: Colors.grey,
+                                                color: secondaryColor,
                                               ),
                                             ),
                                           ),
@@ -237,6 +257,7 @@ class _HotelViewsState extends State<HotelViews> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
+                              color: accentColor,
                             ),
                           ),
                         ),
@@ -250,12 +271,13 @@ class _HotelViewsState extends State<HotelViews> {
                         itemCount: 5,
                         itemBuilder: (context, index) {
                           return Card(
+                            color: Theme.of(context).brightness == Brightness.dark ? primarySecond : primarySecond,
                             margin: const EdgeInsets.only(right: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: radiusBorder,
                             ),
                             child: InkWell(
-                              splashColor: Colors.blue[50],
+                              splashColor: const Color(0xFF3EBACE),
                               onTap: () {},
                               child: const SizedBox(
                                 width: 150,

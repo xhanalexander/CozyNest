@@ -1,26 +1,29 @@
-import 'package:cozynest/screen/auth/register.dart';
+import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../themes/constant.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import 'login.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
+  final confirmController = TextEditingController();
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
     passController.dispose();
+    confirmController.dispose();
     super.dispose();
   }
 
@@ -41,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +59,12 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const SizedBox(height: 20),
                   inputForms(labelText: "Name", controller: nameController, obscureText: false, prefixIcon: Icons.person),
-                  // const SizedBox(height: 20),
-                  // inputForms(labelText: "Email", controller: emailController, obscureText: false, prefixIcon: Icons.email),
+                  const SizedBox(height: 20),
+                  inputForms(labelText: "Email", controller: emailController, obscureText: false, prefixIcon: Icons.email),
                   const SizedBox(height: 20),
                   passForms(labelText: "Password", controller: passController,  prefixIcon: Icons.lock),
+                  const SizedBox(height: 20),
+                  passForms(labelText: "Confirm Password", controller: confirmController, prefixIcon: Icons.lock),
                   const SizedBox(height: 25),
                   SizedBox(
                     width: double.infinity,
@@ -79,26 +85,24 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child:
-                          const Text("Sign In", style: TextStyle(fontSize: 20)),
+                        const Text("Sign Up", style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an account?", style: TextStyle(color: Colors.amber[600])),
+                      Text("Already have an account?", style: TextStyle(color: Colors.amber[600])),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => const RegisterPage(),
+                              pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(1.0, 0.0);
                                 const end = Offset.zero;
                                 const curve = Curves.ease;
-
                                 final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
                                 return SlideTransition(
                                   position: animation.drive(tween),
                                   child: child,
@@ -107,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           );
                         },
-                        child: const Text("Register"),
+                        child: const Text("Sign In"),
                       ),
                     ],
                   ),
@@ -128,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
       required IconData prefixIcon}) {
     return TextFormField(
       controller: controller,
-      style: const TextStyle(color: secondaryColor),
+      style: TextStyle(color: Colors.amber[600]),
       decoration: InputDecoration(
         filled: true,
         fillColor: primarySecond,
