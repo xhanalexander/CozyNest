@@ -28,7 +28,7 @@ class _HotelListState extends State<HotelList> {
           return Card(
             child: ListTile(
               title: Text(modelViewList.hotels[index].name),
-              subtitle: Text(modelViewList.hotels[index].address!),
+              subtitle: Text(modelViewList.hotels[index].address!, style: const TextStyle(fontSize: 12),),
             ),
           );
         },
