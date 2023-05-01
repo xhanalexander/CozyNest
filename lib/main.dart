@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
             '/homepage' : (context) => const HotelViews(),
             '/detail' : (context) => const HotelDetail(),
             '/list' : (context) => const HotelList(),
+            '/register' : (context) => const RegisterPage(),
           },
         ),
       ),

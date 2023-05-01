@@ -1,3 +1,4 @@
+import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,25 +35,74 @@ class _ProfileAccountState extends State<ProfileAccount> {
       (route) => false,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: const Text(
+          'Profile Settings',
+          style: TextStyle(
+            color: accentColor,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: accentColor,
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: accentColor,
+            height: 1.0,
+          ),
+        ),
+        /* actions: [
           IconButton(
             onPressed: () => isLogout(context),
             icon: const Icon(Icons.logout),
           ),
-        ],
+        ], */
       ),
-      body: Center(
+      body: Container(
+        margin: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Welcome'),
-            Text(displayName),
-          ],
+            Column(
+              children: [
+                const Icon(
+                  Icons.account_circle,
+                  color: secondaryColor,
+                  size: 128,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                    border: UnderlineInputBorder(),
+                  ),
+                  initialValue: displayName,
+                  // readOnly: true,
+                  validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your name";
+                  }
+                  return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: UnderlineInputBorder(),
+                  ),
+                  initialValue: '',
+                ),
+              ],
+            ),
+          ]
         ),
       ),
     );

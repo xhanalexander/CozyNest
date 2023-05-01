@@ -1,4 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'hotel_viewModel.dart';
@@ -26,9 +26,10 @@ class _HotelListState extends State<HotelList> {
         itemCount: modelViewList.hotels.take(10).length, 
         itemBuilder: (context, index) {
           return Card(
+            color: primarySecond,
             child: ListTile(
-              title: Text(modelViewList.hotels[index].name),
-              subtitle: Text(modelViewList.hotels[index].address!, style: const TextStyle(fontSize: 12),),
+              title: Text(modelViewList.hotels[index].name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: secondaryColor)),
+              subtitle: Text(modelViewList.hotels[index].address!, style: const TextStyle(fontSize: 14, color: accentColor),),
             ),
           );
         },
