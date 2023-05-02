@@ -12,6 +12,9 @@ class HotelAPI {
     try {
       final response = await dio.get(
         _BASE_URL,
+        queryParameters: {
+          'exact_class': '5',
+        },
         options: Options(
           headers: {
             'X-RapidAPI-Key': API_KEY,
@@ -19,7 +22,6 @@ class HotelAPI {
           },
         ),
       );
-
       // log(">> results = " + response.statusCode.toString());
 
       if (response.statusCode == 200) {
@@ -36,5 +38,4 @@ class HotelAPI {
       throw Exception('Failed to load hotels: $e');
     }
   }
-  
 }

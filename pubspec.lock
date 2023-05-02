@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  expandable_text:
+    dependency: "direct main"
+    description:
+      name: expandable_text
+      sha256: "7d03ea48af6987b20ece232678b744862aa3250d4a71e2aaf1e4af90015d76b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   fake_async:
     dependency: transitive
     description:
@@ -164,10 +172,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.5"
+    version: "0.13.6"
   http_parser:
     dependency: transitive
     description:
@@ -376,6 +384,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
