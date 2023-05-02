@@ -26,10 +26,10 @@ class _HotelListState extends State<HotelList> {
         itemCount: modelViewList.hotels.take(10).length, 
         itemBuilder: (context, index) {
           return Card(
-            color: primarySecond,
+            // color: primarySecond,
             child: ListTile(
-              title: Text(modelViewList.hotels[index].name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: secondaryColor)),
-              subtitle: Text(modelViewList.hotels[index].address!, style: const TextStyle(fontSize: 14, color: accentColor),),
+              title: Text(modelViewList.hotels[index].name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              subtitle: Text(modelViewList.hotels[index].address!, style: const TextStyle(fontSize: 14),),
             ),
           );
         },
