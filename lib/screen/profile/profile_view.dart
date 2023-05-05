@@ -31,7 +31,7 @@ class _ProfileAccountState extends State<ProfileAccount> {
 
     Navigator.pushNamedAndRemoveUntil(
       context,
-      '/',
+      '/register',
       (route) => false,
     );
   }
@@ -83,14 +83,8 @@ class _ProfileAccountState extends State<ProfileAccount> {
                     labelText: 'Username',
                     border: UnderlineInputBorder(),
                   ),
+                  readOnly: true,
                   initialValue: displayName,
-                  // readOnly: true,
-                  validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your name";
-                  }
-                  return null;
-                  },
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
@@ -98,7 +92,6 @@ class _ProfileAccountState extends State<ProfileAccount> {
                     labelText: 'Email',
                     border: UnderlineInputBorder(),
                   ),
-                  initialValue: '',
                 ),
               ],
             ),
