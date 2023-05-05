@@ -25,7 +25,34 @@ class HotelViewModel extends ChangeNotifier {
     }
     notifyListeners();
     // log(">> results =" + hotels[0].name);
+  }
+}
 
+class InnViewModel extends ChangeNotifier  {
+  List<InnModel> _inns = [];
+  HotelState _state = HotelState.initial;
+
+  List<InnModel> get inns => _inns;
+  
+  HotelState get state => _state;
+
+  // getInns({required String checkin, required String checkout,}) async {
+  getInns() async {
+    _state = HotelState.loading;
+
+    try {
+      /* final inns = await innAPi.getSearchinn(
+        checkin: checkin,
+        checkout: checkout,
+      ); */
+      final inns = await innAPi.getSearchinn();
+      _inns = inns;
+      _state = HotelState.loaded;
+    } catch (e) {
+      _state = HotelState.error;
+    }
+    notifyListeners();
+    // log(">> results =" + hotels[0].name);
   }
   
 }

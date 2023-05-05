@@ -41,6 +41,10 @@ dependencies:
   shimmer: ^2.0.0
   http: ^0.13.5
   dio: ^5.1.1
+  url_launcher: ^6.1.10
+  sqflite: ^2.2.8
+  intl: ^0.18.1
+  flutter_staggered_animations: ^1.1.1
 
 flutter_icons:
   android: true

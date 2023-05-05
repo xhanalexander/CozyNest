@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../hotel/hotel_view_List.dart';
 
-class Highlights extends StatelessWidget {
-  const Highlights({super.key, required this.highlighted});
+class Highlight extends StatelessWidget {
+  const Highlight({super.key, required this.highlighted});
 
   final String highlighted;
   @override
@@ -34,7 +34,7 @@ class Highlights extends StatelessWidget {
             );
           },
           child: const Text(
-            "View More",
+            "View All",
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,

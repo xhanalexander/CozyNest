@@ -22,8 +22,12 @@ class MyApp extends StatelessWidget {
           create: (context) => HotelViewModel(),
         ),
         ChangeNotifierProvider(
+          create: (context) => InnViewModel(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
-        )
+        ),
+        
       ], 
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) => MaterialApp(

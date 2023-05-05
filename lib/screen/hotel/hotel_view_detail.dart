@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../themes/constant.dart';
 import 'hotel_viewModel.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HotelDetail extends StatefulWidget {
   // const HotelDetail({super.key});
@@ -122,7 +123,6 @@ class _HotelDetailState extends State<HotelDetail> {
                 linkColor: Colors.blue,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Color.fromARGB(180, 0, 0, 0)
                 ),
                 textAlign: TextAlign.justify,
               ),
@@ -135,10 +135,13 @@ class _HotelDetailState extends State<HotelDetail> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {
-                    
+                  onPressed: () async {
+                    const phoneNumber = '081318583537';
+                    const message = 'Hello! I want to book a room.'; // replace with actual message
+                    final url = 'https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}';
+                    await canLaunch(url) ? launch(url) : print('Cannot launch $url'); 
                   }, 
-                  child: const Text("Book Now"),
+                  child: const Text("Send Message"),
                 ),
               )
             ],
@@ -146,5 +149,19 @@ class _HotelDetailState extends State<HotelDetail> {
         ),
       ),
     );
+  }
+}
+
+class InnDetail extends StatefulWidget {
+  const InnDetail({super.key});
+
+  @override
+  State<InnDetail> createState() => _InnDetailState();
+}
+
+class _InnDetailState extends State<InnDetail> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

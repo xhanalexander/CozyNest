@@ -1,6 +1,7 @@
 import 'package:cozynest/screen/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../db/db_helper.dart';
 import '../../themes/constant.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passController = TextEditingController();
+  late SharedPreferences login;
+  bool obscureText = true;
 
   @override
   void dispose() {
@@ -27,20 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    isLogin();
   }
-
-  late SharedPreferences login;
-  late bool newUser;
-  bool obscureText = true;
-
-  void isLogin() async {
-    login = await SharedPreferences.getInstance();
-    newUser = (login.getBool('login') ?? true);
-    if (!newUser) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
-    }
-  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +46,6 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const SizedBox(height: 20),
                   inputForms(labelText: "Name", controller: nameController, obscureText: false, prefixIcon: Icons.person),
-                  // const SizedBox(height: 20),
-                  // inputForms(labelText: "Email", controller: emailController, obscureText: false, prefixIcon: Icons.email),
                   const SizedBox(height: 20),
                   passForms(labelText: "Password", controller: passController,  prefixIcon: Icons.lock),
                   const SizedBox(height: 25),
@@ -70,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: radiusBorder,
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         String usernames = nameController.text;
                         if (formKey.currentState!.validate()) {
                           login.setBool('login', false);
@@ -79,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child:
-                          const Text("Sign In", style: TextStyle(fontSize: 20)),
+                        Text("Sign In", style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 20),
