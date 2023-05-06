@@ -61,6 +61,16 @@ class MyApp extends StatelessWidget {
             '/list' : (context) => const HotelList(),
             '/register' : (context) => const RegisterPage(),
           },
+          /* onGenerateRoute: (settings) {
+            if (settings.name == '/detail') {
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return HotelDetail(indexes: args['indexes']);
+                },
+              );
+            }
+          } */
         ),
       ),
     );

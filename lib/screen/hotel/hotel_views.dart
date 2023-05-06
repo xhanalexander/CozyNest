@@ -1,19 +1,15 @@
 import 'dart:developer';
-
 import 'package:cozynest/screen/components/shimmerCard.dart';
 import 'package:cozynest/screen/hotel/hotel_view_detail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import '../components/highlight.dart';
 import '../../main.dart';
 import '../components/searchButton.dart';
 import '../profile/profile_view.dart';
-import 'hotel_search.dart';
 import 'hotel_viewModel.dart';
-import 'hotel_view_List.dart';
 
 class HotelViews extends StatefulWidget {
   const HotelViews({super.key});
@@ -29,8 +25,7 @@ class _HotelViewsState extends State<HotelViews> {
   void initState() {
     super.initState();
     isLogin();
-    Provider.of<HotelViewModel>(context, listen: false).getHotels();
-    Provider.of<InnViewModel>(context, listen: false).getInns();
+    Provider.of<InnViewModel>(context, listen: false);
   }
 
   void isLogin() async {
@@ -54,22 +49,8 @@ class _HotelViewsState extends State<HotelViews> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final innModels = Provider.of<InnViewModel>(context);
 
     return Scaffold(
-      /* bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.home),
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
-        ],
-      ), */
       drawer: Drawer(
         width: 230,
         child: ListView(
@@ -113,6 +94,7 @@ class _HotelViewsState extends State<HotelViews> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: themeProvider.isDarkMode ? Colors.white12 : Colors.amber[600],
             flexibleSpace: FlexibleSpaceBar(
               title: RichText(
                 text: TextSpan(
@@ -171,15 +153,13 @@ class _HotelViewsState extends State<HotelViews> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    /* Text(
-                      innModels.inns.length.toString(),
-                    ), */
-                    const SearchButton(),
+                    // const SearchButton(),
+                    const ExploreButton(),
                     const Highlight(highlighted: "Recomended",),
-                    // RecomendedCards(),
+                    recomendedCards(category: "popularity"),
                     const SizedBox(height: 10),
                     const Highlight(highlighted: "Featured",),
-                    FeaturedCard(),
+                    // recomendedCards(category: "review_score"),
                   ],
                 ),
               ),
@@ -190,14 +170,16 @@ class _HotelViewsState extends State<HotelViews> {
     );
   }
 
-  Widget RecomendedCards() {
-    final modelView = Provider.of<HotelViewModel>(context);
-    if (modelView.state == HotelState.initial) {
-      modelView.getHotels();
+  Widget recomendedCards({required String category}) {
+    final innModelView = Provider.of<InnViewModel>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    if (innModelView.state == HotelState.initial) {
+      innModelView.getInns(checkin : "2023-05-10", checkout : "2023-05-11", ordersBy : category);
       return const Center(child: LoadCards());
-    } else if (modelView.state == HotelState.loading) {
+    } else if (innModelView.state == HotelState.loading) {
       return const Center(child: LoadCards());
-    } else if (modelView.state == HotelState.error) {
+    } else if (innModelView.state == HotelState.error) {
       return const Center(child: ErrorCard());
     }
 
@@ -220,7 +202,7 @@ class _HotelViewsState extends State<HotelViews> {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, _) {
-                      return HotelDetail(indexes: index);
+                      return HotelDetail(indexes: index, hotelName: innModelView.inns[index].hotelName, DescBy: "popularity",);
                     },
                     transitionsBuilder: (context, animation, _, child) {
                       return SlideTransition(
@@ -243,8 +225,8 @@ class _HotelViewsState extends State<HotelViews> {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       ),
-                      child: Image.asset(
-                        "assets/images/img_1.jpg",
+                      child: Image.network(
+                        innModelView.inns[index].max_1440PhotoUrl,
                         width: double.infinity,
                         height: 120,
                         fit: BoxFit.cover,
@@ -252,10 +234,14 @@ class _HotelViewsState extends State<HotelViews> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(modelView.hotels[index].name, style: const TextStyle(
+                      child: Text(
+                        innModelView.inns[index].hotelName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        // color: secondaryColor,
+                        color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
                       ),),
                     ),
                     Padding(
@@ -263,14 +249,19 @@ class _HotelViewsState extends State<HotelViews> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Icon(Icons.location_on_outlined, size: 20),
+                          Icon(
+                            Icons.location_on_outlined, 
+                            size: 20, 
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black54
+                          ),
                           Expanded(
                             child: Text(
-                              modelView.hotels[index].address.toString().substring(0, 10),
+                              innModelView.inns[index].address,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
+                                color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
                                 // color: secondaryColor,
                               ),
                             ),
@@ -288,11 +279,20 @@ class _HotelViewsState extends State<HotelViews> {
     );
   }
 
-  Widget FeaturedCard() {
-    final innModelView = Provider.of<InnViewModel>(context);
+  /* Widget featuredCard() {
+    final innModelViewFeatured = Provider.of<InnViewModel>(context);
+    if (innModelViewFeatured.state == HotelState.initial) {
+      innModelViewFeatured.getInns(checkin : "2023-05-10", checkout : "2023-05-11", ordersBy : "review_score");
+      return const Center(child: LoadCards());
+    } else if (innModelViewFeatured.state == HotelState.loading) {
+      return const Center(child: LoadCards());
+    } else if (innModelViewFeatured.state == HotelState.error) {
+      return const Center(child: LoadCards());
+    }
+
     return SizedBox(
       width: double.infinity,
-      height: 210,
+      height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,
@@ -305,7 +305,22 @@ class _HotelViewsState extends State<HotelViews> {
             ),
             child: InkWell(
               // splashColor: accentColor,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, _) {
+                      return HotelDetail(indexes: index, hotelName: innModelViewFeatured.inns[index].hotelName, DescBy: "review_score",);
+                    },
+                    transitionsBuilder: (context, animation, _, child) {
+                      return SlideTransition(
+                        position: Tween<Offset>(
+                        begin: const Offset(1, 0),
+                        end: Offset.zero,
+                      ).animate(animation), child: child,);
+                    },
+                  ),
+                );
+              },
               child: SizedBox(
                 width: 150,
                 height: 200,
@@ -317,8 +332,8 @@ class _HotelViewsState extends State<HotelViews> {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       ),
-                      child: Image.asset(
-                        "assets/images/img_1.jpg",
+                      child: Image.network(
+                        innModelViewFeatured.inns[index].max_1440PhotoUrl,
                         width: double.infinity,
                         height: 120,
                         fit: BoxFit.cover,
@@ -326,7 +341,11 @@ class _HotelViewsState extends State<HotelViews> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Hotel Name", style: const TextStyle(
+                      child: Text(
+                        innModelViewFeatured.inns[index].hotelName,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         // color: secondaryColor,
@@ -340,7 +359,7 @@ class _HotelViewsState extends State<HotelViews> {
                           const Icon(Icons.location_on_outlined, size: 20),
                           Expanded(
                             child: Text(
-                              "Hotel Address",
+                              innModelViewFeatured.inns[index].address,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                               style: const TextStyle(
@@ -360,5 +379,5 @@ class _HotelViewsState extends State<HotelViews> {
         },
       ),
     );
-  }
+  } */
 }

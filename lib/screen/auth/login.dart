@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../db/db_helper.dart';
 import '../../themes/constant.dart';
+import 'authService.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final passController = TextEditingController();
   late SharedPreferences login;
   bool obscureText = true;
+  final authService = AuthServices();
 
   @override
   void dispose() {
@@ -31,6 +33,27 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
+  void loginApp() async {
+    final username = nameController.text;
+    final password = passController.text;
+    final email = emailController.text;
+    login = await SharedPreferences.getInstance();
+
+    if (await authService.loginUser(username, password, email)) {
+      login.setBool('login', false);
+      login.setString('username', username);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/homepage',
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed')),
+      );
+    }
+  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -60,11 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () async {
-                        String usernames = nameController.text;
                         if (formKey.currentState!.validate()) {
-                          login.setBool('login', false);
-                          login.setString('username', usernames);
-                          Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
+                          loginApp();
+
+                        } else {
                         }
                       },
                       child:

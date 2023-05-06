@@ -2,6 +2,7 @@ import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
+import 'authService.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,6 +17,24 @@ class RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmController = TextEditingController();
+  // final namesRegex = RegExp(r'^[A-Z][a-z]*\s[A-Z][a-z]*$');
+  final auths = AuthServices();
+
+  void registerApp() async {
+    final username = nameController.text;
+    final password = passController.text;
+    final email = emailController.text;
+
+    if (await auths.registerUser(username, password, email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration successful')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed')),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -76,11 +95,29 @@ class RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       onPressed: () {
-                        String usernames = nameController.text;
                         if (formKey.currentState!.validate()) {
-                          login.setBool('login', false);
-                          login.setString('username', usernames);
-                          Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
+                          if (passController.text == confirmController.text) {
+                            registerApp();
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(1.0, 0.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+                                  final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Password not match')),
+                            );
+                          }
                         }
                       },
                       child:
@@ -144,6 +181,8 @@ class RegisterPageState extends State<RegisterPage> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please enter your $labelText";
+        } else if (value.length < 3) {
+          return "too short...";
         }
         return null;
       },

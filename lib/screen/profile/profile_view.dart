@@ -1,6 +1,8 @@
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import '../../db/db_helper.dart';
+import '../auth/authService.dart';
 
 class ProfileAccount extends StatefulWidget {
   const ProfileAccount({super.key});
@@ -11,6 +13,39 @@ class ProfileAccount extends StatefulWidget {
 
 class _ProfileAccountState extends State<ProfileAccount> {
   late String displayName = "";
+  final authService = AuthServices();
+
+  void deleteAccount() async {
+    final username = displayName;
+    final password = "";
+    final email = "";
+
+    if (await authService.deleteUser(username)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Delete Account successful')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Delete Account failed')),
+      );
+    }
+  }
+
+  void updateAccount() async {
+    final username = displayName;
+    final password = "";
+    final email = "";
+
+    if (await authService.updateUser(username, password, email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Update Account successful')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Update Account failed')),
+      );
+    }
+  }
 
   @override
   void initState() {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -39,19 +40,18 @@ class HotelAPI {
 class innAPi {
   static const String URL_inn = 'https://booking-com.p.rapidapi.com/v1/hotels/search';
 
-  // static Future<List<InnModel>> getSearchinn({required String checkin, required String checkout}) async {
-  static Future<List<InnModel>> getSearchinn() async {
+  static Future<List<InnModel>> getSearchinn({required String checkin, required String checkout, required String ordersBy}) async {
     final dio = Dio();
     try {
       final response = await dio.get(
         URL_inn,
         queryParameters: {
-          'checkin_date': '2023-05-05',
+          'checkin_date': checkin,
           'dest_type': 'country',
           'units': 'metric',
-          'checkout_date': '2023-05-07',
+          'checkout_date': checkout,
           'adults_number': 2,
-          'order_by': 'review_score',
+          'order_by': ordersBy,
           'dest_id': 128,
           'filter_by_currency': 'IDR',
           'locale': 'id',
@@ -70,8 +70,18 @@ class innAPi {
       if (response.statusCode == 200) {
         final datas = response.data['result'];
         // log('>>> results' + datas.toString() );
-        List<InnModel> inns = List<InnModel>.from(datas.map((model) => InnModel.fromJson(model)));
-        log('>>> RESULT inn = ${inns[0].hotel_name}');
+        List<InnModel> inns = List<InnModel>.from(datas.map((model) {
+          // log('>>> model =' + model['price_breakdown'].toString() );
+          InnModel x = InnModel.fromJson(model);
+          // log('>>> model =' + x.priceBreakdown.toString());
+          return x;
+        }));
+        // log(inns.toString());
+        /* log('>>> RESULT inn hotel name = ${inns[0].hotelName}');
+        log('>>> RESULT inn hotel address = ${inns[0].address}');
+        log('>>> RESULT inn hotel currency = ${inns[0].priceBreakdown.currency}');
+        log('>>> RESULT inn hotel price = ${inns[0].priceBreakdown.grossPrice}');
+        log('>>> RESULT inn hotel photo = ${inns[0].max_1440PhotoUrl}'); */
         return inns;
       } else {
         throw Exception('Failed to load Inn');

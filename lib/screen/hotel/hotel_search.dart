@@ -1,10 +1,13 @@
+import 'dart:math';
 import 'package:cozynest/screen/hotel/hotel_viewModel.dart';
+import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import '../../main.dart';
 import '../components/shimmerCard.dart';
+import 'hotel_view_detail.dart';
 
 class Hotelsearch extends StatefulWidget {
   const Hotelsearch({super.key});
@@ -14,49 +17,60 @@ class Hotelsearch extends StatefulWidget {
 }
 
 class _HotelsearchState extends State<Hotelsearch> {
-  String checkindate = '';
+  String checkinDate = '';
   String checkoutdate = '';
+  final currentDate = DateTime.now();
+  final periodDate = DateTime.now().add(const Duration(days: 80));
 
   void showDatePickerCheckin(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final selectDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
+      initialDate: currentDate,
+      firstDate: currentDate,
+      lastDate: periodDate,
     );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        checkindate = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
+    setState(() {
+      if (selectDate != null /* && selectDate != checkinDate */) {
+        checkinDate = DateFormat('yyyy-MM-dd').format(selectDate);
+      }
+    });
   }
 
   void showDatePickerCheckout(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final pickDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 1)),
-      firstDate: DateTime.now().add(const Duration(days: 1)),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
+      initialDate: currentDate,
+      firstDate: currentDate,
+      lastDate: periodDate,
     );
-    if (picked != null && picked != DateTime.now()) {
-      setState(() {
-        checkoutdate = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Provider.of<InnViewModel>(context, listen: false).getInns(checkin: '2023-05-04', checkout: '2023-05-07');
-    Provider.of<InnViewModel>(context, listen: false).getInns();
+    setState(() {
+      if (pickDate != null /* && pickDate != checkoutdate */) {
+        checkoutdate = DateFormat('yyyy-MM-dd').format(pickDate);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hotel Search'),
+        title: Text(
+          'Hotel Search',
+          style: themeProvider.isDarkMode ? const TextStyle(color: Colors.amber) : const TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: themeProvider.isDarkMode ? accentColor : Colors.black54,
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: accentColor,
+            height: 1.0,
+          ),
+        ),
       ),
       body: Container(
         margin: const EdgeInsets.all(15),
@@ -70,8 +84,15 @@ class _HotelsearchState extends State<Hotelsearch> {
                     flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
-                        Text('Check In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      children: [
+                        Text(
+                          'Check In', 
+                        style: TextStyle(
+                          fontSize: 16, 
+                          fontWeight: FontWeight.w600,
+                          color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                        )
+                      ),
                       ],
                     )
                   ),
@@ -79,8 +100,15 @@ class _HotelsearchState extends State<Hotelsearch> {
                     flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
-                        Text('Check Out', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      children: [
+                        Text(
+                          'Check Out', 
+                          style: TextStyle(
+                            fontSize: 16, 
+                            fontWeight: FontWeight.w600,
+                            color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                          )
+                        ),
                       ],
                     )
                   ),
@@ -99,13 +127,17 @@ class _HotelsearchState extends State<Hotelsearch> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color: Colors.grey[300],
+                          border: Border.all(
+                            width: themeProvider.isDarkMode ? 1 : 0,
+                            color: themeProvider.isDarkMode ? Colors.white : Colors.grey[300]!,
+                          ),
+                          color: themeProvider.isDarkMode ? Colors.transparent : Colors.grey[300]!,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(DateFormat('yyyy-MM-dd').format(DateTime.now())),
-                            const Icon(Icons.calendar_month),
+                            Text(checkinDate, style: const TextStyle(color: Colors.grey)),
+                            const Icon(Icons.calendar_month, color: Colors.grey),
                           ],
                         ),
                       ),
@@ -122,13 +154,17 @@ class _HotelsearchState extends State<Hotelsearch> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color: Colors.grey[300],
-                        ),
+                          border: Border.all(
+                            width: themeProvider.isDarkMode ? 1 : 0,
+                            color: themeProvider.isDarkMode ? Colors.white : Colors.grey[300]!,
+                          ),
+                          color: themeProvider.isDarkMode ? Colors.transparent : Colors.grey[300]!,
+                        ),  
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(checkoutdate),
-                            const Icon(Icons.calendar_month),
+                            Text(checkoutdate, style: TextStyle(color: Colors.grey[600])),
+                            const Icon(Icons.calendar_month, color: Colors.grey),
                           ],
                         ),
                       ),
@@ -145,9 +181,18 @@ class _HotelsearchState extends State<Hotelsearch> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        backgroundColor: themeProvider.isDarkMode ? Colors.amber : primaryThird,
                       ),
-                      onPressed: () {
-                        // Provider.of<InnViewModel>(context, listen: false).getInns(checkin: checkindate, checkout: checkoutdate);
+                      onPressed: () async {
+                        await Provider.of<InnViewModel>(context, listen: false).getInns(checkin: checkinDate, checkout: checkoutdate, ordersBy: 'review_score');
+                        if (checkinDate == '' || checkoutdate == '') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please insert date'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        }
                       },
                       child: const Text('Apply Date'),
                     ),
@@ -155,7 +200,7 @@ class _HotelsearchState extends State<Hotelsearch> {
                 ],
               ),
               const SizedBox(height: 14),
-              InnGridSearch(),
+              innGridSearch(),
             ],
           ),
         ),
@@ -163,21 +208,35 @@ class _HotelsearchState extends State<Hotelsearch> {
     );
   }
 
-  Widget InnGridSearch() {
+  Widget innGridSearch() {
     final innViewModel = Provider.of<InnViewModel>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     if (innViewModel.state == HotelState.initial) {
-      innViewModel.getInns();
-      return const Center(child: LoadCards());
+      innViewModel.getInns(checkin: checkinDate, checkout: checkoutdate, ordersBy: 'review_score');
+      return const Center(child: Text('Insert date to search'));
     } else if (innViewModel.state == HotelState.loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: LoadGrid());
     } else if (innViewModel.state == HotelState.error) {
-      return const Center(child: ErrorCard());
+      return Padding(
+        padding: const EdgeInsets.only(top: 128),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.search_off, color: Colors.grey, size: 50),
+              SizedBox(height: 10),
+              Text('No Result Found...', style: TextStyle(color: Colors.grey)),
+            ],
+          )
+        ),
+      );
     }
+
     return AnimationLimiter(
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 7,
+        itemCount: min(innViewModel.inns.length, 5),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
@@ -188,13 +247,27 @@ class _HotelsearchState extends State<Hotelsearch> {
             duration: const Duration(milliseconds: 375),
             columnCount: 2,
             child: SlideAnimation(
-              verticalOffset: 50.0,
+              verticalOffset: 200.0,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, _) {
+                          return HotelDetail(indexes: index, hotelName: innViewModel.inns[index].hotelName, DescBy: '',);
+                        },
+                        transitionsBuilder: (context, animation, _, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -204,18 +277,61 @@ class _HotelsearchState extends State<Hotelsearch> {
                           height: 150,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/img_1.jpg'),
+                            image: DecorationImage(
+                              image: NetworkImage(innViewModel.inns[index].max_1440PhotoUrl),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Text('name'),
+                        Text(
+                          innViewModel.inns[index].hotelName,
+                          style: TextStyle(
+                            fontSize: 16, 
+                            fontWeight: FontWeight.w600,
+                            color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
                         const SizedBox(height: 5),
-                        Text('address'),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on, 
+                              size: 18, 
+                              color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                            ),
+                            Expanded(
+                              child: Text(
+                                innViewModel.inns[index].address, 
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14, 
+                                  color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                                )
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 5),
-                        Text('pricess'),
+                        /* Text(innViewModel.inns[index].priceBreakdown.currency + ' ' + innViewModel.inns[index].priceBreakdown.grossPrice.toString()), */
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.attach_money, 
+                              size: 18, 
+                              color: themeProvider.isDarkMode ? secondaryColor : Colors.black54),
+                            Text(
+                              innViewModel.inns[index].priceBreakdown.grossPrice.toString(), 
+                              style: TextStyle(
+                                fontSize: 14, 
+                                color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                              )
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
