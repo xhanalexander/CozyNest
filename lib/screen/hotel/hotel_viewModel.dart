@@ -15,7 +15,6 @@ class HotelViewModel extends ChangeNotifier {
 
   getHotels() async {
     _state = HotelState.loading;
-
     try {
       final hotels = await HotelAPI.getAllHotel();
       _hotels = hotels;
@@ -24,7 +23,6 @@ class HotelViewModel extends ChangeNotifier {
       _state = HotelState.error;
     }
     notifyListeners();
-    // log(">> results =" + hotels[0].name);
   }
 }
 
@@ -36,23 +34,43 @@ class InnViewModel extends ChangeNotifier  {
   
   HotelState get state => _state;
 
-  // getInns({required String checkin, required String checkout,}) async {
-  getInns() async {
+  getInns({required String checkin, required String checkout, required ordersBy}) async {
     _state = HotelState.loading;
-
+    notifyListeners();
     try {
-      /* final inns = await innAPi.getSearchinn(
+      final inns = await innAPi.getSearchinn(
         checkin: checkin,
         checkout: checkout,
-      ); */
-      final inns = await innAPi.getSearchinn();
+        ordersBy: ordersBy,
+      );
       _inns = inns;
       _state = HotelState.loaded;
     } catch (e) {
       _state = HotelState.error;
     }
     notifyListeners();
-    // log(">> results =" + hotels[0].name);
+  }
+}
+
+class LocalInnViewModel extends ChangeNotifier {
+  List<InnModel> _inns = [];
+  HotelState _state = HotelState.initial;
+
+  List<InnModel> get inns => _inns;
+  
+  HotelState get state => _state;
+
+  getExploreLocalInn({required String ordersBy}) async {
+    _state = HotelState.loading;
+    notifyListeners();
+    try {
+      final inns = await LocalInn.getExploreInn(ordersBy: ordersBy);
+      _inns = inns;
+      _state = HotelState.loaded;
+    } catch (e) {
+      _state = HotelState.error;
+    }
+    notifyListeners();
   }
   
 }

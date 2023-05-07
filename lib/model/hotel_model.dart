@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 class HotelModel {
   final int hotel_id;
   final String name;
@@ -41,41 +44,55 @@ class HotelModel {
 /// Inn Model
 
 class InnModel {
-  final int hotel_id;
-  final String hotel_name;
-  final String? address;
-  final int gross_price;
-  final String? max_1440_photo_url;
-  final String details;
-
   InnModel({
-    required this.hotel_id,
-    required this.hotel_name,
-    this.address,
-    required this.gross_price,
-    this.max_1440_photo_url,
-    required this.details,
+    required this.hotelId,
+    required this.hotelName,
+    required this.address,
+    required this.max_1440PhotoUrl,
+    required this.priceBreakdown,
   });
-
-  factory InnModel.fromJson(Map<String, dynamic> json) {
-    return InnModel(
-      hotel_id: json['hotel_id'],
-      hotel_name: json['hotel_name'],
-      address: json['address'],
-      gross_price: json['gross_price'],
-      max_1440_photo_url: json['max_1440_photo_url'],
-      details: json['details'],
-    );
+  late final int hotelId;
+  late final String hotelName;
+  late final String address;
+  late final String max_1440PhotoUrl;
+  late final PriceBreakdown priceBreakdown;
+  
+  InnModel.fromJson(Map<String, dynamic> json){
+    hotelId = json['hotel_id'];
+    hotelName = json['hotel_name'];
+    address = json['address'];
+    max_1440PhotoUrl = json['max_1440_photo_url'];
+    priceBreakdown = PriceBreakdown.fromJson(json['price_breakdown']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'hotel_id': hotel_id,
-      'hotel_name': hotel_name,
-      'address': address,
-      'gross_price': gross_price,
-      'max_1440_photo_url': max_1440_photo_url,
-      'details': details,
-    };
+    final _data = <String, dynamic>{};
+    _data['hotel_id'] = hotelId;
+    _data['hotel_name'] = hotelName;
+    _data['address'] = address;
+    _data['max_1440_photo_url'] = max_1440PhotoUrl;
+    _data['price_breakdown'] = priceBreakdown.toJson();
+    return _data;
+  }
+}
+
+class PriceBreakdown {
+  PriceBreakdown({
+    required this.grossPrice,
+    required this.currency,
+  });
+  late final double grossPrice;
+  late final String currency;
+  
+  PriceBreakdown.fromJson(Map<String, dynamic> json){
+    grossPrice = double.parse(json['gross_price'].toString());
+    currency = json['currency'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['gross_price'] = grossPrice;
+    _data['currency'] = currency;
+    return _data;
   }
 }

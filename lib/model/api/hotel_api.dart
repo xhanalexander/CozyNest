@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -39,19 +40,18 @@ class HotelAPI {
 class innAPi {
   static const String URL_inn = 'https://booking-com.p.rapidapi.com/v1/hotels/search';
 
-  // static Future<List<InnModel>> getSearchinn({required String checkin, required String checkout}) async {
-  static Future<List<InnModel>> getSearchinn() async {
+  static Future<List<InnModel>> getSearchinn({required String checkin, required String checkout, required String ordersBy}) async {
     final dio = Dio();
     try {
       final response = await dio.get(
         URL_inn,
         queryParameters: {
-          'checkin_date': '2023-05-05',
+          'checkin_date': checkin,
           'dest_type': 'country',
           'units': 'metric',
-          'checkout_date': '2023-05-07',
+          'checkout_date': checkout,
           'adults_number': 2,
-          'order_by': 'review_score',
+          'order_by': ordersBy,
           'dest_id': 128,
           'filter_by_currency': 'IDR',
           'locale': 'id',
@@ -69,9 +69,54 @@ class innAPi {
       
       if (response.statusCode == 200) {
         final datas = response.data['result'];
-        // log('>>> results' + datas.toString() );
-        List<InnModel> inns = List<InnModel>.from(datas.map((model) => InnModel.fromJson(model)));
-        log('>>> RESULT inn = ${inns[0].hotel_name}');
+        List<InnModel> inns = List<InnModel>.from(datas.map((model) {
+          InnModel x = InnModel.fromJson(model);
+          return x;
+        }));
+        return inns;
+      } else {
+        throw Exception('Failed to load Inn');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Inn: $e');
+    }
+  }
+}
+
+class LocalInn {
+  static const String URL_inn = 'https://booking-com.p.rapidapi.com/v1/hotels/search';
+
+  static Future<List<InnModel>> getExploreInn({required String ordersBy}) async {
+    final dio = Dio();
+    try {
+      final response = await dio.get(
+        URL_inn,
+        queryParameters: {
+          'checkin_date': '2023-05-11',
+          'dest_type': "district",
+          'units': 'metric',
+          'checkout_date': '2023-05-13',
+          'adults_number': 2,
+          'order_by': ordersBy,
+          'dest_id': 2067,
+          'filter_by_currency': 'IDR',
+          'locale': 'id',
+          'room_number': 1,
+        },
+        options: Options(
+          headers: {
+            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
+          },
+        ),
+      );
+      
+      if (response.statusCode == 200) {
+        final datas = response.data['result'];
+        List<InnModel> inns = List<InnModel>.from(datas.map((model) {
+          InnModel x = InnModel.fromJson(model);
+          return x;
+        }));
         return inns;
       } else {
         throw Exception('Failed to load Inn');

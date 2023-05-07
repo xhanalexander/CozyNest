@@ -1,29 +1,63 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:cozynest/screen/auth/register.dart';
+import 'package:cozynest/screen/hotel/hotel_viewModel.dart';
+import 'package:cozynest/screen/hotel/hotel_view_List.dart';
+import 'package:cozynest/screen/hotel/hotel_views.dart';
+import 'package:cozynest/screen/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cozynest/main.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Test if all main components in Dashboard', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => HotelViewModel(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => InnViewModel(),
+          ),/* 
+          ChangeNotifierProvider(
+            create: (context) => ThemeProvider(),
+          ), */
+        ], 
+        child: Consumer<ThemeProvider>(
+          builder: (context, themeProvider, child) => MaterialApp(
+            initialRoute: '/homepage',
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            routes: {
+              '/': (context) => WelcomeApp(),
+              '/homepage' : (context) => HotelViews(),
+              '/list' : (context) => HotelList(),
+              '/register' : (context) => RegisterPage(),
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 5));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.byType(AppBar), anything);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byType(Drawer), anything);
+
+    expect(find.text('Dark Mode'), anything);
+
+    expect(find.byWidgetPredicate((widget) => widget is Text && widget.data == 'Logout'), anything);
+
+    expect(find.byWidgetPredicate((widget) => widget is Text && widget.data == 'Report Bug'), anything);
+
+    expect(find.text('Welcome,'), anything);
+
+    expect(find.text('Recomended'), anything);
+
+    expect(find.text('Featured'), anything);
   });
+
+
 }

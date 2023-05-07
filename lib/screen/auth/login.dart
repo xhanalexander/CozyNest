@@ -1,8 +1,10 @@
+import 'package:cozynest/screen/auth/auth_otp.dart';
 import 'package:cozynest/screen/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../db/db_helper.dart';
 import '../../themes/constant.dart';
+import 'authService.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final passController = TextEditingController();
   late SharedPreferences login;
   bool obscureText = true;
+  final authService = AuthServices();
 
   @override
   void dispose() {
@@ -31,6 +34,30 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
   }
+
+  void loginApp() async {
+    final username = nameController.text;
+    final password = passController.text;
+    final email = emailController.text;
+    login = await SharedPreferences.getInstance();
+
+    if (await authService.loginUser(username, password, email)) {
+      login.setBool('login', false);
+      login.setString('username', username);
+      /* Navigator.of(context).pushNamedAndRemoveUntil(
+        '/homepage',
+        (Route<dynamic> route) => false,
+      ); */
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const OTPCode())
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed... Wrong username or password')),
+      );
+    }
+  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -56,19 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amber[600],
                         shape: const RoundedRectangleBorder(
-                          borderRadius: radiusBorder,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                       ),
                       onPressed: () async {
-                        String usernames = nameController.text;
                         if (formKey.currentState!.validate()) {
-                          login.setBool('login', false);
-                          login.setString('username', usernames);
-                          Navigator.of(context).pushNamedAndRemoveUntil('/homepage', (Route<dynamic> route) => false);
+                          loginApp();
                         }
                       },
                       child:
-                        Text("Sign In", style: TextStyle(fontSize: 20)),
+                        const Text("Sign In", style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 20),

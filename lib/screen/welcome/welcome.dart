@@ -27,10 +27,11 @@ class _WelcomeAppState extends State<WelcomeApp> {
     Future.delayed(const Duration(seconds: 3), () {
       if (!newUser) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            '/homepage', (Route<dynamic> route) => false);
+          '/homepage', (Route<dynamic> route) => false
+        );
       } else {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            '/register', (Route<dynamic> route) => false);
+          '/register', (Route<dynamic> route) => false);
       }
     });
 
@@ -52,67 +53,6 @@ class _WelcomeAppState extends State<WelcomeApp> {
             CircularProgressIndicator(
               color: primaryThird,
             ),
-            // SizedBox(height: 32),
-            /* SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[600],
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: radiusBorder,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) {
-                        return const RegisterPage();
-                      },
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: const Text('REGISTER'),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: radiusBorder,
-                  ),
-                  side: const BorderSide(
-                    color: accentColor,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) {
-                      return const LoginPage();
-                    },
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: child,
-                      );
-                    },
-                    ),
-                  );
-                },
-                child: Text('LOGIN', style: TextStyle(color: Colors.amber[600])),
-              ),
-            ), */
           ],
         ),
       )

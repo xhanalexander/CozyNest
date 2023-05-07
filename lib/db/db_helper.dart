@@ -1,64 +1,65 @@
+import 'dart:async';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-
 import '../model/user_model.dart';
+import 'db.dart';
 
-class DatabaseHelper {
-  static Database? _database;
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-  DatabaseHelper._privateConstructor();
-
-  static const String tableName = 'users';
-  static const String columnId = 'id';
-  static const String columnUsername = 'username';
-  static const String columnEmail = 'email';
-  static const String columnPassword = 'password';
-
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
-    _database = await _initDatabase();
-    return _database!;
+class DBHelper {
+  Future<int> createUser(UserAuth user) async {
+    final db = await DatabaseProvider.instance.database;
+    return await db.insert('users', user.toMap());
   }
 
-  Future<Database> _initDatabase() async {
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'auth.db');
+  Future<UserAuth?> getUserByUsername(String username) async {
+    final db = await DatabaseProvider.instance.database;
+    final result = await db.query('users', where: 'username = ?', whereArgs: [username]);
 
-    return await openDatabase(path, version: 1, onCreate: _createTable);
-  }
-
-  void _createTable(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE $tableName (
-        $columnId INTEGER PRIMARY KEY,
-        $columnUsername TEXT,
-        $columnEmail TEXT,
-        $columnPassword TEXT
-      )
-    ''');
-  }
-
-  Future<int> insertUser(UserAuth user, String emails) async {
-    final db = await instance.database;
-    return await db.insert(tableName, user.toMap());
-  }
-
-  Future<UserAuth?> getUser(String username, String password) async {
-    final db = await instance.database;
-    final users = await db.query(tableName,
-        where: '$columnUsername = ? AND $columnPassword = ?',
-        whereArgs: [username, password]);
-    if (users.isEmpty) {
+    if (result.isNotEmpty) {
+      return UserAuth.fromMap(result.first);
+    } else {
       return null;
     }
-    return UserAuth.fromMap(users.first);
   }
 
-  Future<bool> isEmailAlreadyUsed(String email) async {
-    final db = await instance.database;
-    final users = await db.query(tableName, where: '$columnEmail = ?', whereArgs: [email]);
-    return users.isNotEmpty;
+  Future<int> updateUser(UserAuth user) async {
+    final db = await DatabaseProvider.instance.database;
+    return await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
+
+  Future<int> deleteUser(int id) async {
+    final db = await DatabaseProvider.instance.database;
+    return await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
+/* 
+  Future<UserAuth?> deleteUser(int id) async {
+    final db = await DatabaseProvider.instance.database;
+    final result = await db.query('users', where: 'id = ?', whereArgs: [id]);
+
+    if (result.isNotEmpty) {
+      await db.delete('users', where: 'id = ?', whereArgs: [id]);
+      return UserAuth.fromMap(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<UserAuth?> updateUser(UserAuth user) async {
+    final db = await DatabaseProvider.instance.database;
+    final result = await db.query('users', where: 'id = ?', whereArgs: [user.id]);
+
+    if (result.isNotEmpty) {
+      await db.update('users', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
+      return UserAuth.fromMap(result.first);
+    } else {
+      return null;
+    }
+  } */
