@@ -1,3 +1,4 @@
+import 'package:cozynest/screen/auth/auth_otp.dart';
 import 'package:cozynest/screen/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,13 +44,16 @@ class _LoginPageState extends State<LoginPage> {
     if (await authService.loginUser(username, password, email)) {
       login.setBool('login', false);
       login.setString('username', username);
-      Navigator.of(context).pushNamedAndRemoveUntil(
+      /* Navigator.of(context).pushNamedAndRemoveUntil(
         '/homepage',
         (Route<dynamic> route) => false,
+      ); */
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const OTPCode())
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed')),
+        const SnackBar(content: Text('Login failed... Wrong username or password')),
       );
     }
   }
@@ -79,18 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amber[600],
                         shape: const RoundedRectangleBorder(
-                          borderRadius: radiusBorder,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                       ),
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           loginApp();
-
-                        } else {
                         }
                       },
                       child:
-                        Text("Sign In", style: TextStyle(fontSize: 20)),
+                        const Text("Sign In", style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 20),

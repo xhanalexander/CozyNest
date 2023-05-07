@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
 import '../../themes/constant.dart';
@@ -22,16 +24,7 @@ class _HotelDetailState extends State<HotelDetail> {
 
   _HotelDetailState({required this.DescBy});
 
-
-  /* @override
-  void initState() {
-    super.initState();
-    Provider.of<InnViewModel>(context, listen: false).getInns( 
-      checkin: "2023-05-10", 
-      checkout: "2023-05-11", 
-      ordersBy: DescBy, 
-    );
-  } */
+  final URLs = "https://api.stay.id/v1/hotel/detail?hotel_id=";
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +66,16 @@ class _HotelDetailState extends State<HotelDetail> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  detailInn.inns[widget.indexes].max_1440PhotoUrl,
+                child: CachedNetworkImage(
+                  imageUrl: detailInn.inns[widget.indexes].max_1440PhotoUrl,
+                  width: double.infinity,
                   fit: BoxFit.cover,
                   height: 200,
-                  width: double.infinity,
-                )
+                  placeholder: (context, url) => SpinKitFadingFour(
+                    color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                    size: 50,
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
               Text(
@@ -102,8 +99,8 @@ class _HotelDetailState extends State<HotelDetail> {
                       detailInn.inns[widget.indexes].address,
                       maxLines: 2,
                       style: TextStyle(
-                        fontSize: 18,
-                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                        fontSize: 16,
+                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
                       ),
                     ),
                   ),
@@ -125,7 +122,7 @@ class _HotelDetailState extends State<HotelDetail> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
                         ),
                       ),
                     ],
@@ -143,10 +140,180 @@ class _HotelDetailState extends State<HotelDetail> {
               ),
               const SizedBox(height: 7),
               ExpandableText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit turpis cursus in hac habitasse platea. Sed libero enim sed faucibus turpis in eu mi bibendum. Ut sem viverra aliquet eget sit. Id semper risus in hendrerit gravida rutrum. Nibh ipsum consequat nisl vel pretium lectus quam. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi. Lectus magna fringilla urna porttitor rhoncus dolor. Orci nulla pellentesque dignissim enim sit amet venenatis. Euismod elementum nisi quis eleifend quam adipiscing.",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit turpis cursus in hac habitasse platea. Sed libero enim sed faucibus turpis in eu mi bibendum. \n\nUt sem viverra aliquet eget sit. Id semper risus in hendrerit gravida rutrum. Nibh ipsum consequat nisl vel pretium lectus quam. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi. \n\nLectus magna fringilla urna porttitor rhoncus dolor. Orci nulla pellentesque dignissim enim sit amet venenatis. Euismod elementum nisi quis eleifend quam adipiscing.",
                 expandText: 'show more',
                 collapseText: 'show less',
                 maxLines: 2,
+                animation: true,
+                animationCurve: Curves.easeInCubic,
+                linkColor: Colors.blue,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    backgroundColor: themeProvider.isDarkMode ? Colors.amber[600] : primaryThird,
+                  ),
+                  onPressed: () async {
+                    /* const phoneNumber = '081318583537';
+                    var message = 'Hello! I want to book a for 1 room please in ${detailInn.inns[widget.indexes].hotelName}';
+                    final url = 'https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}';
+                    await canLaunch(url) ? launch(url) : print('Cannot launch $url'); */
+                    
+                  }, 
+                  child: const Text("Send Message"),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    
+  }
+}
+
+// --------------------------------------- Hardcoded pls fixed --------------------------------------- //
+
+class InnDetail extends StatefulWidget {
+  final int indexes;
+  const InnDetail({super.key, required this.indexes});
+
+  @override
+  State<InnDetail> createState() => _InnDetailState();
+}
+
+class _InnDetailState extends State<InnDetail> {
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final detailInn = Provider.of<LocalInnViewModel>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: Text(
+          detailInn.inns[widget.indexes].hotelName,
+          style: TextStyle(
+            // color: secondaryColor,
+            color: themeProvider.isDarkMode ? Colors.amber : Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: themeProvider.isDarkMode ? accentColor : Colors.black54,
+          // color: Colors.black,
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: accentColor,
+            height: 1.0,
+          ),
+        ),
+      ),
+      
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: detailInn.inns[widget.indexes].max_1440PhotoUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  height: 200,
+                  placeholder: (context, url) => SpinKitFadingFour(
+                    color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                    size: 50,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                detailInn.inns[widget.indexes].hotelName,
+                style: TextStyle(
+                  color: themeProvider.isDarkMode ? Colors.amber : Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                  ),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      detailInn.inns[widget.indexes].address,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.attach_money,
+                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        detailInn.inns[widget.indexes].priceBreakdown.grossPrice.toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Description",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: themeProvider.isDarkMode ? Colors.amber : Colors.black
+                ),
+              ),
+              const SizedBox(height: 7),
+              ExpandableText(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit turpis cursus in hac habitasse platea. Sed libero enim sed faucibus turpis in eu mi bibendum. \n\nUt sem viverra aliquet eget sit. Id semper risus in hendrerit gravida rutrum. Nibh ipsum consequat nisl vel pretium lectus quam. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi. \n\nLectus magna fringilla urna porttitor rhoncus dolor. Orci nulla pellentesque dignissim enim sit amet venenatis. Euismod elementum nisi quis eleifend quam adipiscing.",
+                expandText: 'show more',
+                collapseText: 'show less',
+                maxLines: 2,
+                animation: true,
+                animationCurve: Curves.easeInCubic,
                 linkColor: Colors.blue,
                 style: TextStyle(
                   fontSize: 14,
@@ -178,27 +345,5 @@ class _HotelDetailState extends State<HotelDetail> {
         ),
       ),
     );
-  }
-}
-
-class InnDetail extends StatefulWidget {
-  final int indexes;
-  const InnDetail({super.key, required this.indexes});
-
-  @override
-  State<InnDetail> createState() => _InnDetailState();
-}
-
-class _InnDetailState extends State<InnDetail> {
-  @override
-  void initState() {
-    super.initState();
-    // Provider.of<InnViewModel>(context, listen: false).getInns();
-  }
-
-  // final innIndexmodel = Provider.of<InnViewModel>(context);
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

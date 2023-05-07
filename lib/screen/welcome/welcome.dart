@@ -31,7 +31,7 @@ class _WelcomeAppState extends State<WelcomeApp> {
         );
       } else {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            '/register', (Route<dynamic> route) => false);
+          '/register', (Route<dynamic> route) => false);
       }
     });
 

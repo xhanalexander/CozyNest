@@ -13,12 +13,8 @@ void main() {
       expect(inns.length, 20);
     });
 
-    test('fetch all inn score', () async {
-      final inns = await innAPi.getSearchinn(
-        checkin: '2023-05-10',
-        checkout: '2023-05-11',
-        ordersBy: 'review_score',
-      );
+    test('fetch all local INN', () async {
+      final inns = await LocalInn.getExploreInn(ordersBy: "review_score");
       expect(inns.length, 20);
     });
 

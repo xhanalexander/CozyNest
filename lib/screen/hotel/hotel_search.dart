@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cozynest/screen/hotel/hotel_viewModel.dart';
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -236,7 +238,7 @@ class _HotelsearchState extends State<Hotelsearch> {
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: min(innViewModel.inns.length, 5),
+        itemCount: min(innViewModel.inns.length, 7),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
@@ -273,13 +275,23 @@ class _HotelsearchState extends State<Hotelsearch> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        CachedNetworkImage(
+                          imageUrl: innViewModel.inns[index].max_1440PhotoUrl,
+                          placeholder: (context, url) => SpinKitFadingFour(
+                            color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                            size: 50,
+                          ),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                          fit: BoxFit.cover,
                           height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(innViewModel.inns[index].max_1440PhotoUrl),
-                              fit: BoxFit.cover,
+                          width: double.infinity,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -292,7 +304,7 @@ class _HotelsearchState extends State<Hotelsearch> {
                             color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
                           ),
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                          maxLines: 1,
                         ),
                         const SizedBox(height: 5),
                         Row(

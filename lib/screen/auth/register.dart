@@ -27,7 +27,10 @@ class RegisterPageState extends State<RegisterPage> {
 
     if (await auths.registerUser(username, password, email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful')),
+        SnackBar(
+          content: Text('Registration successful'),
+          backgroundColor: Colors.amber[600],
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -91,7 +94,7 @@ class RegisterPageState extends State<RegisterPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.amber[600],
                         shape: const RoundedRectangleBorder(
-                          borderRadius: radiusBorder,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
                       ),
                       onPressed: () {

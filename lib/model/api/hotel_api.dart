@@ -69,19 +69,54 @@ class innAPi {
       
       if (response.statusCode == 200) {
         final datas = response.data['result'];
-        // log('>>> results' + datas.toString() );
         List<InnModel> inns = List<InnModel>.from(datas.map((model) {
-          // log('>>> model =' + model['price_breakdown'].toString() );
           InnModel x = InnModel.fromJson(model);
-          // log('>>> model =' + x.priceBreakdown.toString());
           return x;
         }));
-        // log(inns.toString());
-        /* log('>>> RESULT inn hotel name = ${inns[0].hotelName}');
-        log('>>> RESULT inn hotel address = ${inns[0].address}');
-        log('>>> RESULT inn hotel currency = ${inns[0].priceBreakdown.currency}');
-        log('>>> RESULT inn hotel price = ${inns[0].priceBreakdown.grossPrice}');
-        log('>>> RESULT inn hotel photo = ${inns[0].max_1440PhotoUrl}'); */
+        return inns;
+      } else {
+        throw Exception('Failed to load Inn');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Inn: $e');
+    }
+  }
+}
+
+class LocalInn {
+  static const String URL_inn = 'https://booking-com.p.rapidapi.com/v1/hotels/search';
+
+  static Future<List<InnModel>> getExploreInn({required String ordersBy}) async {
+    final dio = Dio();
+    try {
+      final response = await dio.get(
+        URL_inn,
+        queryParameters: {
+          'checkin_date': '2023-05-11',
+          'dest_type': "district",
+          'units': 'metric',
+          'checkout_date': '2023-05-13',
+          'adults_number': 2,
+          'order_by': ordersBy,
+          'dest_id': 2067,
+          'filter_by_currency': 'IDR',
+          'locale': 'id',
+          'room_number': 1,
+        },
+        options: Options(
+          headers: {
+            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
+          },
+        ),
+      );
+      
+      if (response.statusCode == 200) {
+        final datas = response.data['result'];
+        List<InnModel> inns = List<InnModel>.from(datas.map((model) {
+          InnModel x = InnModel.fromJson(model);
+          return x;
+        }));
         return inns;
       } else {
         throw Exception('Failed to load Inn');

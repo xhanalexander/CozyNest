@@ -51,3 +51,26 @@ class InnViewModel extends ChangeNotifier  {
     notifyListeners();
   }
 }
+
+class LocalInnViewModel extends ChangeNotifier {
+  List<InnModel> _inns = [];
+  HotelState _state = HotelState.initial;
+
+  List<InnModel> get inns => _inns;
+  
+  HotelState get state => _state;
+
+  getExploreLocalInn({required String ordersBy}) async {
+    _state = HotelState.loading;
+    notifyListeners();
+    try {
+      final inns = await LocalInn.getExploreInn(ordersBy: ordersBy);
+      _inns = inns;
+      _state = HotelState.loaded;
+    } catch (e) {
+      _state = HotelState.error;
+    }
+    notifyListeners();
+  }
+  
+}

@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cozynest/screen/components/shimmerCard.dart';
 import 'package:cozynest/screen/hotel/hotel_view_detail.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,9 @@ class _HotelViewsState extends State<HotelViews> {
     super.initState();
     isLogin();
     Provider.of<InnViewModel>(context, listen: false);
+    Provider.of<LocalInnViewModel>(context, listen: false);
   }
+
 
   void isLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,21 +76,7 @@ class _HotelViewsState extends State<HotelViews> {
             ListTile(
               leading: const Icon(Icons.bug_report),
               title: const Text("Report Bug"),
-              onTap: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, _) {
-                      return const ProfileAccount();
-                    },
-                    transitionsBuilder: (context, animation, _, child) {
-                      return SlideTransition(position: Tween<Offset>(
-                        begin: const Offset(1, 0),
-                        end: Offset.zero,
-                      ).animate(animation), child: child,);
-                    },
-                  ),
-                );
-              },
+              onTap: () {},
             ),
           ],
         ),
@@ -153,13 +143,12 @@ class _HotelViewsState extends State<HotelViews> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // const SearchButton(),
                     const ExploreButton(),
-                    const Highlight(highlighted: "Recomended",),
+                    const RecoHighlight(highlighted: "Recomended",),
                     recomendedCards(category: "popularity"),
                     const SizedBox(height: 10),
-                    const Highlight(highlighted: "Featured",),
-                    // recomendedCards(category: "review_score"),
+                    const FeaturedHighlight(highlighted: "Featured",),
+                    featuredCard(category: "review_score"),
                   ],
                 ),
               ),
@@ -225,12 +214,16 @@ class _HotelViewsState extends State<HotelViews> {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       ),
-                      child: Image.network(
-                        innModelView.inns[index].max_1440PhotoUrl,
+                      child: CachedNetworkImage(
+                        imageUrl: innModelView.inns[index].max_1440PhotoUrl,
                         width: double.infinity,
                         height: 120,
                         fit: BoxFit.cover,
-                      )
+                        placeholder: (context, url) => SpinKitFadingFour(
+                          color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                          size: 50,
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -262,7 +255,6 @@ class _HotelViewsState extends State<HotelViews> {
                               style: TextStyle(
                                 fontSize: 14,
                                 color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
-                                // color: secondaryColor,
                               ),
                             ),
                           ),
@@ -279,10 +271,12 @@ class _HotelViewsState extends State<HotelViews> {
     );
   }
 
-  /* Widget featuredCard() {
-    final innModelViewFeatured = Provider.of<InnViewModel>(context);
+  Widget featuredCard({required String category}) {
+    final innModelViewFeatured = Provider.of<LocalInnViewModel>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     if (innModelViewFeatured.state == HotelState.initial) {
-      innModelViewFeatured.getInns(checkin : "2023-05-10", checkout : "2023-05-11", ordersBy : "review_score");
+      innModelViewFeatured.getExploreLocalInn(ordersBy: category);
       return const Center(child: LoadCards());
     } else if (innModelViewFeatured.state == HotelState.loading) {
       return const Center(child: LoadCards());
@@ -309,7 +303,7 @@ class _HotelViewsState extends State<HotelViews> {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, _) {
-                      return HotelDetail(indexes: index, hotelName: innModelViewFeatured.inns[index].hotelName, DescBy: "review_score",);
+                      return InnDetail(indexes: index);
                     },
                     transitionsBuilder: (context, animation, _, child) {
                       return SlideTransition(
@@ -332,12 +326,16 @@ class _HotelViewsState extends State<HotelViews> {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       ),
-                      child: Image.network(
-                        innModelViewFeatured.inns[index].max_1440PhotoUrl,
+                      child: CachedNetworkImage(
+                        imageUrl: innModelViewFeatured.inns[index].max_1440PhotoUrl,
                         width: double.infinity,
                         height: 120,
                         fit: BoxFit.cover,
-                      )
+                        placeholder: (context, url) => SpinKitFadingFour(
+                          color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
+                          size: 50,
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -345,10 +343,10 @@ class _HotelViewsState extends State<HotelViews> {
                         innModelViewFeatured.inns[index].hotelName,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        // color: secondaryColor,
+                        color: themeProvider.isDarkMode ? Colors.amber[600] : Colors.black,
                       ),),
                     ),
                     Padding(
@@ -356,15 +354,19 @@ class _HotelViewsState extends State<HotelViews> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Icon(Icons.location_on_outlined, size: 20),
+                          Icon(
+                            Icons.location_on_outlined, 
+                            size: 20,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black54
+                          ),
                           Expanded(
                             child: Text(
                               innModelViewFeatured.inns[index].address,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
-                                // color: secondaryColor,
+                                color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
                               ),
                             ),
                           ),
@@ -379,5 +381,5 @@ class _HotelViewsState extends State<HotelViews> {
         },
       ),
     );
-  } */
+  }
 }

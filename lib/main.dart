@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
           create: (context) => InnViewModel(),
         ),
         ChangeNotifierProvider(
+          create: (context) => LocalInnViewModel(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
         ),
         
@@ -33,25 +36,18 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
-          theme: ThemeData.light(),/* .copyWith(
+          theme: ThemeData.light().copyWith(
             scaffoldBackgroundColor: Colors.white,
             colorScheme: ThemeData.light().colorScheme.copyWith(
               primary: Colors.amber[600],
               secondary: accentColor,
             ),
-            primaryColor: Colors.amber[600],
-            textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: primaryThird,
-            ),
-          ), */
+          ),
           darkTheme: ThemeData.dark(),/* .copyWith(
             scaffoldBackgroundColor: primaryColor,
             colorScheme: ThemeData.dark().colorScheme.copyWith(
               primary: Colors.amber[600],
               secondary: secondaryColor,
-            ),
-            textTheme: ThemeData.dark().textTheme.apply(
-              bodyColor: accentColor,
             ),
           ), */
           themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -61,16 +57,6 @@ class MyApp extends StatelessWidget {
             '/list' : (context) => const HotelList(),
             '/register' : (context) => const RegisterPage(),
           },
-          /* onGenerateRoute: (settings) {
-            if (settings.name == '/detail') {
-              final args = settings.arguments as Map<String, dynamic>;
-              return MaterialPageRoute(
-                builder: (context) {
-                  return HotelDetail(indexes: args['indexes']);
-                },
-              );
-            }
-          } */
         ),
       ),
     );
