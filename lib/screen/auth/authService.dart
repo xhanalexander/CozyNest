@@ -32,10 +32,10 @@ class AuthServices {
     }
   }
 
-  Future<bool> updateUser(String username, String password, String email) async {
+  Future<bool> updateUser(String username, String password, String email, String newUsername) async {
     UserAuth? user = await dbHelper.getUserByUsername(username);
     if (user != null) {
-      final updatedUser = UserAuth(username: username, password: password, email: email);
+      final updatedUser = UserAuth(username: newUsername, password: password, email: email);
       await dbHelper.updateUser(updatedUser);
       return true;
     } else {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:sqflite/sqflite.dart';
 import '../model/user_model.dart';
 import 'db.dart';
 
@@ -39,27 +38,3 @@ class DBHelper {
     );
   }
 }
-/* 
-  Future<UserAuth?> deleteUser(int id) async {
-    final db = await DatabaseProvider.instance.database;
-    final result = await db.query('users', where: 'id = ?', whereArgs: [id]);
-
-    if (result.isNotEmpty) {
-      await db.delete('users', where: 'id = ?', whereArgs: [id]);
-      return UserAuth.fromMap(result.first);
-    } else {
-      return null;
-    }
-  }
-
-  Future<UserAuth?> updateUser(UserAuth user) async {
-    final db = await DatabaseProvider.instance.database;
-    final result = await db.query('users', where: 'id = ?', whereArgs: [user.id]);
-
-    if (result.isNotEmpty) {
-      await db.update('users', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
-      return UserAuth.fromMap(result.first);
-    } else {
-      return null;
-    }
-  } */

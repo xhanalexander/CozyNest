@@ -17,7 +17,6 @@ class RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final confirmController = TextEditingController();
-  // final namesRegex = RegExp(r'^[A-Z][a-z]*\s[A-Z][a-z]*$');
   final auths = AuthServices();
 
   void registerApp() async {
