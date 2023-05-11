@@ -22,6 +22,7 @@ class HotelViews extends StatefulWidget {
 
 class _HotelViewsState extends State<HotelViews> {
   late String displayName = "";
+  late String email = "";
 
   @override
   void initState() {
@@ -281,7 +282,7 @@ class _HotelViewsState extends State<HotelViews> {
     } else if (innModelViewFeatured.state == HotelState.loading) {
       return const Center(child: LoadCards());
     } else if (innModelViewFeatured.state == HotelState.error) {
-      return const Center(child: LoadCards());
+      return const Center(child: ErrorCard());
     }
 
     return SizedBox(

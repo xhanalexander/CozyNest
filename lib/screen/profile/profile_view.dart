@@ -14,29 +14,79 @@ class ProfileAccount extends StatefulWidget {
 class _ProfileAccountState extends State<ProfileAccount> {
   late String displayName = "";
   final authService = AuthServices();
+  final newUserName = TextEditingController();
 
-  void deleteAccount() async {
+  void deleteAccount(BuildContext context) async {
     final username = displayName;
     final password = "";
     final email = "";
 
-    if (await authService.deleteUser(username)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Delete Account successful')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Delete Account failed')),
-      );
+    bool confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Account Deletion"),
+          content: Text("Are you sure you want to delete your account? This action cannot be undone."),
+          actions: <Widget>[
+            TextButton(
+              child: Text("CANCEL"),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text("DELETE"),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed) {
+      if (await authService.deleteUser(username)) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Account Deleted"),
+              content: Text("Your account has been deleted."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    await prefs.clear();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/',
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Delete Account failed')),
+        );
+      }
     }
   }
 
+
   void updateAccount() async {
     final username = displayName;
+    final newUsername = newUserName.text;
     final password = "";
     final email = "";
 
-    if (await authService.updateUser(username, password, email)) {
+    if (await authService.updateUser(username, password, email, newUsername)) {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('username', newUsername);
+      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Update Account successful')),
       );
@@ -94,131 +144,100 @@ class _ProfileAccountState extends State<ProfileAccount> {
             height: 1.0,
           ),
         ),
-        /* actions: [
-          IconButton(
-            onPressed: () => isLogout(context),
-            icon: const Icon(Icons.logout),
+      ),
+      body: Form(
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          width: double.infinity,
+          child: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.account_circle_rounded,
+                      size: 100,
+                      color: accentColor,
+                    ),
+                    Text(
+                      displayName,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: newUserName,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              labelStyle: TextStyle(
+                                color: accentColor,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: accentColor,
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: accentColor,
+                                ),
+                              ),
+                            ),
+                            // initialValue:
+                          ),
+                          SizedBox(height: 20),
+                          ListTile(
+                            title: const Text(
+                              'Delete Account',
+                              style: TextStyle(
+                                color: accentColor,
+                              ),
+                            ),
+                            trailing: const Icon(
+                              Icons.delete_forever_rounded,
+                              color: accentColor,
+                            ),
+                            onTap: () {
+                              deleteAccount(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),   
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    updateAccount();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    // "Update Account",
+                    "Update Account",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ], */
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Account',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => isLogout(context),
-                  icon: const Icon(Icons.logout),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Display Name',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  displayName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Email',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  'email',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  '********',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Delete Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => deleteAccount(),
-                  icon: const Icon(Icons.delete),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Update Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => updateAccount(),
-                  icon: const Icon(Icons.update),
-                ),
-              ],
-            ),
-          ]
         ),
-      ),
+      )
     );
   }
 }

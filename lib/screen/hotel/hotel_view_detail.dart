@@ -112,11 +112,14 @@ class _HotelDetailState extends State<HotelDetail> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.attach_money,
-                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                      Text(
+                        'Price : ${detailInn.inns[widget.indexes].priceBreakdown.currency}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                        ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 3),
                       Text(
                         detailInn.inns[widget.indexes].priceBreakdown.grossPrice.toString(),
                         style: TextStyle(
@@ -131,6 +134,110 @@ class _HotelDetailState extends State<HotelDetail> {
               ),
               const SizedBox(height: 10),
               Text(
+                "Facilities",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: themeProvider.isDarkMode ? Colors.amber : Colors.black
+                ),
+              ),
+              const SizedBox(height: 7),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.wifi,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Free Wifi",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.local_parking,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Free Parking",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.restaurant,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Restaurant",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.pool,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Swimming Pool",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.smoke_free,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "No Smoking",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 7),
+              Text(
                 "Description",
                 style: TextStyle(
                   fontSize: 18,
@@ -140,7 +247,7 @@ class _HotelDetailState extends State<HotelDetail> {
               ),
               const SizedBox(height: 7),
               ExpandableText(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit turpis cursus in hac habitasse platea. Sed libero enim sed faucibus turpis in eu mi bibendum. \n\nUt sem viverra aliquet eget sit. Id semper risus in hendrerit gravida rutrum. Nibh ipsum consequat nisl vel pretium lectus quam. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi. \n\nLectus magna fringilla urna porttitor rhoncus dolor. Orci nulla pellentesque dignissim enim sit amet venenatis. Euismod elementum nisi quis eleifend quam adipiscing.",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Blandit turpis cursus in hac habitasse platea. Sed libero enim sed faucibus turpis in eu mi bibendum.",
                 expandText: 'show more',
                 collapseText: 'show less',
                 maxLines: 2,
@@ -164,11 +271,10 @@ class _HotelDetailState extends State<HotelDetail> {
                     backgroundColor: themeProvider.isDarkMode ? Colors.amber[600] : primaryThird,
                   ),
                   onPressed: () async {
-                    /* const phoneNumber = '081318583537';
+                    const phoneNumber = '081318583537';
                     var message = 'Hello! I want to book a for 1 room please in ${detailInn.inns[widget.indexes].hotelName}';
                     final url = 'https://wa.me/$phoneNumber?text=${Uri.encodeFull(message)}';
-                    await canLaunch(url) ? launch(url) : print('Cannot launch $url'); */
-                    
+                    await canLaunch(url) ? launch(url) : print('Cannot launch $url');
                   }, 
                   child: const Text("Send Message"),
                 ),
@@ -182,7 +288,7 @@ class _HotelDetailState extends State<HotelDetail> {
   }
 }
 
-// --------------------------------------- Hardcoded pls fixed --------------------------------------- //
+// --------------------------------------- Hardcoded pls halp --------------------------------------- //
 
 class InnDetail extends StatefulWidget {
   final int indexes;
@@ -280,11 +386,15 @@ class _InnDetailState extends State<InnDetail> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.attach_money,
-                        color: themeProvider.isDarkMode ? secondaryColor : Colors.black,
+                      Text(
+                        "Price : ${detailInn.inns[widget.indexes].priceBreakdown.currency}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          // fontWeight: FontWeight.bold,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                        ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 3),
                       Text(
                         detailInn.inns[widget.indexes].priceBreakdown.grossPrice.toString(),
                         style: TextStyle(
@@ -296,6 +406,110 @@ class _InnDetailState extends State<InnDetail> {
                     ],
                   ),
                 ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Facilities",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: themeProvider.isDarkMode ? Colors.amber : Colors.black
+                ),
+              ),
+              const SizedBox(height: 7),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.wifi,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Free Wifi",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.local_parking,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Free Parking",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.restaurant,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Restaurant",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.pool,
+                          color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Swimming Pool",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: const EdgeInsets.all(10)),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.smoke_free,
+                            color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "No Smoking",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: themeProvider.isDarkMode ? secondaryColor : Colors.black87,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
               Text(

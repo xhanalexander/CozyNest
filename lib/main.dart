@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
         ),
-        
       ], 
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) => MaterialApp(
@@ -61,8 +60,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-
-  
 }
 
 class ThemeProvider extends ChangeNotifier {

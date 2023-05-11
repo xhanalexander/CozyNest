@@ -331,10 +331,13 @@ class _HotelsearchState extends State<Hotelsearch> {
                         /* Text(innViewModel.inns[index].priceBreakdown.currency + ' ' + innViewModel.inns[index].priceBreakdown.grossPrice.toString()), */
                         Row(
                           children: [
-                            Icon(
-                              Icons.attach_money, 
-                              size: 18, 
-                              color: themeProvider.isDarkMode ? secondaryColor : Colors.black54),
+                            Text(
+                              innViewModel.inns[index].priceBreakdown.currency + ' ', 
+                              style: TextStyle(
+                                fontSize: 14, 
+                                color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,
+                              )
+                            ),
                             Text(
                               innViewModel.inns[index].priceBreakdown.grossPrice.toString(), 
                               style: TextStyle(

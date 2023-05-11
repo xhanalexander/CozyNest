@@ -19,14 +19,17 @@ void main() {
           ),
           ChangeNotifierProvider(
             create: (context) => InnViewModel(),
-          ),/* 
+          ),
+          ChangeNotifierProvider(
+          create: (context) => LocalInnViewModel(),
+          ),
           ChangeNotifierProvider(
             create: (context) => ThemeProvider(),
-          ), */
+          ),
         ], 
         child: Consumer<ThemeProvider>(
           builder: (context, themeProvider, child) => MaterialApp(
-            initialRoute: '/homepage',
+            initialRoute: '/',
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
             themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
