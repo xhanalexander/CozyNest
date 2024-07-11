@@ -196,7 +196,7 @@ class _HotelViewsState extends State<HotelViews> {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, _) {
-                      return HotelDetail(indexes: index, hotelName: innModelView.inns[index].hotelName, DescBy: "popularity",);
+                      return HotelDetail(indexes: index, hotelName: innModelView.inns[index].hotelName, descBy: "popularity",);
                     },
                     transitionsBuilder: (context, animation, _, child) {
                       return SlideTransition(

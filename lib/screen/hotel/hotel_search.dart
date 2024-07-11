@@ -219,12 +219,12 @@ class _HotelsearchState extends State<Hotelsearch> {
     } else if (innViewModel.state == HotelState.loading) {
       return const Center(child: LoadGrid());
     } else if (innViewModel.state == HotelState.error) {
-      return Padding(
-        padding: const EdgeInsets.only(top: 128),
+      return const Padding(
+        padding: EdgeInsets.only(top: 128),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.search_off, color: Colors.grey, size: 50),
               SizedBox(height: 10),
               Text('No Result Found...', style: TextStyle(color: Colors.grey)),
@@ -259,7 +259,7 @@ class _HotelsearchState extends State<Hotelsearch> {
                     Navigator.of(context).push(
                       PageRouteBuilder(
                         pageBuilder: (context, animation, _) {
-                          return HotelDetail(indexes: index, hotelName: innViewModel.inns[index].hotelName, DescBy: '',);
+                          return HotelDetail(indexes: index, hotelName: innViewModel.inns[index].hotelName, descBy: '',);
                         },
                         transitionsBuilder: (context, animation, _, child) {
                           return FadeTransition(
@@ -332,7 +332,7 @@ class _HotelsearchState extends State<Hotelsearch> {
                         Row(
                           children: [
                             Text(
-                              innViewModel.inns[index].priceBreakdown.currency + ' ', 
+                              '${innViewModel.inns[index].priceBreakdown.currency} ', 
                               style: TextStyle(
                                 fontSize: 14, 
                                 color: themeProvider.isDarkMode ? secondaryColor : Colors.black54,

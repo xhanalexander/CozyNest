@@ -49,8 +49,8 @@ class ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         Icon(Icons.wifi_off_rounded, color: Colors.grey, size: 50),
         SizedBox(height: 10),
         Text(

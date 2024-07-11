@@ -81,7 +81,7 @@ class _HotelListState extends State<HotelList> {
                             return HotelDetail(
                               indexes: index,
                               hotelName: modelViewList.inns[index].hotelName,
-                              DescBy: "popularity",
+                              descBy: "popularity",
                             );
                           },
                           transitionsBuilder: (context, animation, _, child) {
@@ -148,7 +148,7 @@ class _featuredListState extends State<featuredList> {
               duration: const Duration(milliseconds: 800),
               child: SlideAnimation(
                 horizontalOffset: 320.0,
-                delay: Duration(milliseconds: 235),
+                delay: const Duration(milliseconds: 235),
                 child: Card(
                   // color: primarySecond,
                   child: ListTile(

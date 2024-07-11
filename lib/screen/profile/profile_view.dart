@@ -25,17 +25,17 @@ class _ProfileAccountState extends State<ProfileAccount> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Account Deletion"),
-          content: Text("Are you sure you want to delete your account? This action cannot be undone."),
+          title: const Text("Confirm Account Deletion"),
+          content: const Text("Are you sure you want to delete your account? This action cannot be undone."),
           actions: <Widget>[
             TextButton(
-              child: Text("CANCEL"),
+              child: const Text("CANCEL"),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("DELETE"),
+              child: const Text("DELETE"),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -51,10 +51,10 @@ class _ProfileAccountState extends State<ProfileAccount> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("Account Deleted"),
-              content: Text("Your account has been deleted."),
+              content: const Text("Your account has been deleted."),
               actions: <Widget>[
                 TextButton(
-                  child: Text("OK"),
+                  child: const Text("OK"),
                   onPressed: () async {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     await prefs.clear();
@@ -190,7 +190,7 @@ class _ProfileAccountState extends State<ProfileAccount> {
                             ),
                             // initialValue:
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           ListTile(
                             title: const Text(
                               'Delete Account',
@@ -224,7 +224,7 @@ class _ProfileAccountState extends State<ProfileAccount> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     // "Update Account",
                     "Update Account",
                     style: TextStyle(
