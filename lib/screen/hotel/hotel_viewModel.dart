@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import '../../model/api/hotel_api.dart';
 import '../../model/hotel_model.dart';
@@ -60,11 +59,11 @@ class LocalInnViewModel extends ChangeNotifier {
   
   HotelState get state => _state;
 
-  getExploreLocalInn({required String ordersBy}) async {
+  getExploreLocalInn({required String ordersBy, required String chekins, required String checkOut}) async {
     _state = HotelState.loading;
     notifyListeners();
     try {
-      final inns = await LocalInn.getExploreInn(ordersBy: ordersBy);
+      final inns = await LocalInn.getExploreInn(ordersBy: ordersBy, checkIn: chekins, checkOuts: checkOut);
       _inns = inns;
       _state = HotelState.loaded;
     } catch (e) {

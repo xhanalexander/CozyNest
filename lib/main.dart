@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
         ),
-      ], 
+      ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -38,23 +38,18 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.light().copyWith(
             scaffoldBackgroundColor: Colors.white,
             colorScheme: ThemeData.light().colorScheme.copyWith(
-              primary: Colors.amber[600],
-              secondary: accentColor,
-            ),
+                  primary: Colors.amber[600],
+                  secondary: accentColor,
+                ),
           ),
-          darkTheme: ThemeData.dark(),/* .copyWith(
-            scaffoldBackgroundColor: primaryColor,
-            colorScheme: ThemeData.dark().colorScheme.copyWith(
-              primary: Colors.amber[600],
-              secondary: secondaryColor,
-            ),
-          ), */
-          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          darkTheme: ThemeData.dark(),
+          themeMode:
+              themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           routes: {
             '/': (context) => const WelcomeApp(),
-            '/homepage' : (context) => const HotelViews(),
-            '/list' : (context) => const HotelList(),
-            '/register' : (context) => const RegisterPage(),
+            '/homepage': (context) => const HotelViews(),
+            '/list': (context) => const HotelList(),
+            '/register': (context) => const RegisterPage(),
           },
         ),
       ),

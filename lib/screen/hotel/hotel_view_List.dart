@@ -29,8 +29,8 @@ class _HotelListState extends State<HotelList> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     if (modelViewList.state == HotelState.initial) {
       modelViewList.getInns( 
-        checkin: "2023-05-10", 
-        checkout: "2023-05-11", 
+        checkin: DateTime.now().toString(),
+        checkout: DateTime.now().add(const Duration(days: 1)).toString(),
         ordersBy: "popularity", 
       );
       return const Center(child: Scaffold(

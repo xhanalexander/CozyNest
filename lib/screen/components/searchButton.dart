@@ -1,4 +1,3 @@
-import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import '../hotel/hotel_search.dart';
 

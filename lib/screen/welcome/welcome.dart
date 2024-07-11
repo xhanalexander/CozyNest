@@ -1,5 +1,3 @@
-import 'package:cozynest/screen/auth/login.dart';
-import 'package:cozynest/screen/auth/register.dart';
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

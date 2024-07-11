@@ -2,7 +2,6 @@ import 'package:cozynest/screen/auth/auth_otp.dart';
 import 'package:cozynest/screen/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../db/db_helper.dart';
 import '../../themes/constant.dart';
 import 'authService.dart';
 
@@ -92,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child:
-                        const Text("Sign In", style: TextStyle(fontSize: 20)),
+                        const Text("Sign In", style: TextStyle(fontSize: 20, color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 20),

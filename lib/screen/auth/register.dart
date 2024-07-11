@@ -123,7 +123,7 @@ class RegisterPageState extends State<RegisterPage> {
                         }
                       },
                       child:
-                        const Text("Sign Up", style: TextStyle(fontSize: 20)),
+                        const Text("Sign Up", style: TextStyle(fontSize: 20, color: Colors.white)),
                     ),
                   ),
                   const SizedBox(height: 20),

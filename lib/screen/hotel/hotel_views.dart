@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cozynest/screen/components/shimmerCard.dart';
 import 'package:cozynest/screen/hotel/hotel_view_detail.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cozynest/themes/constant.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +165,11 @@ class _HotelViewsState extends State<HotelViews> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     if (innModelView.state == HotelState.initial) {
-      innModelView.getInns(checkin : "2023-05-10", checkout : "2023-05-11", ordersBy : category);
+      innModelView.getInns(
+        checkin : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        checkout : DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)) ),
+        ordersBy : category
+      );
       return const Center(child: LoadCards());
     } else if (innModelView.state == HotelState.loading) {
       return const Center(child: LoadCards());
@@ -277,7 +281,11 @@ class _HotelViewsState extends State<HotelViews> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     if (innModelViewFeatured.state == HotelState.initial) {
-      innModelViewFeatured.getExploreLocalInn(ordersBy: category);
+      innModelViewFeatured.getExploreLocalInn(
+        ordersBy: category,
+        chekins: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        checkOut: DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)) ),
+      );
       return const Center(child: LoadCards());
     } else if (innModelViewFeatured.state == HotelState.loading) {
       return const Center(child: LoadCards());

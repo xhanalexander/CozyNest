@@ -18,8 +18,8 @@ class _ProfileAccountState extends State<ProfileAccount> {
 
   void deleteAccount(BuildContext context) async {
     final username = displayName;
-    final password = "";
-    final email = "";
+    const password = "";
+    const email = "";
 
     bool confirmed = await showDialog(
       context: context,

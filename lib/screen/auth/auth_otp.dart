@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:expandable_text/text_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../themes/constant.dart';

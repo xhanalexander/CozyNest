@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
 
 class HotelModel {
   final int hotel_id;

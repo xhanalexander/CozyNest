@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'privates.dart';
 import '../hotel_model.dart';
 
 class HotelAPI {
@@ -18,7 +17,7 @@ class HotelAPI {
         },
         options: Options(
           headers: {
-            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Key': 'c807de0302msh714ba343d5f6c4ap1d70cfjsn67868ef67b38',
             'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
           },
         ),
@@ -59,7 +58,7 @@ class innAPi {
         },
         options: Options(
           headers: {
-            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Key': 'c807de0302msh714ba343d5f6c4ap1d70cfjsn67868ef67b38',
             'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
           },
         ),
@@ -86,16 +85,16 @@ class innAPi {
 class LocalInn {
   static const String URL_inn = 'https://booking-com.p.rapidapi.com/v1/hotels/search';
 
-  static Future<List<InnModel>> getExploreInn({required String ordersBy}) async {
+  static Future<List<InnModel>> getExploreInn({required String ordersBy, required String checkOuts, required String checkIn}) async {
     final dio = Dio();
     try {
       final response = await dio.get(
         URL_inn,
         queryParameters: {
-          'checkin_date': '2023-05-11',
+          'checkin_date': checkIn,
           'dest_type': "district",
           'units': 'metric',
-          'checkout_date': '2023-05-13',
+          'checkout_date': checkOuts,
           'adults_number': 2,
           'order_by': ordersBy,
           'dest_id': 2067,
@@ -105,7 +104,7 @@ class LocalInn {
         },
         options: Options(
           headers: {
-            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Key': 'c807de0302msh714ba343d5f6c4ap1d70cfjsn67868ef67b38',
             'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
           },
         ),
